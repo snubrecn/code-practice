@@ -74,7 +74,7 @@ void permutationDup(int k/*level*/) {
 	k++;
 	for (int i = 1; i <= N; i++) {
 		a[k] = src[i];
-		permutation(k);
+		permutationDup(k);
 	}
 }
 

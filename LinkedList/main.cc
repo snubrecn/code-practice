@@ -12,9 +12,6 @@ typedef struct linked_list {
 	Node* tail;
 } LinkedList;
 
-Node* head;
-Node* tail;
-
 LinkedList* list;
 
 int cnt;
@@ -27,15 +24,15 @@ void Init() {
 	list->head->prev = NULL;
 	list->tail->next = NULL;
 
-	list->head->next = tail;
-	list->tail->prev = head;
+	list->head->next = list->tail;
+	list->tail->prev = list->head;
 }
 
 void Print() {
 	std::cout << "List count " << cnt << " element: ";
 	Node* pos = list->head->next;
 	
-	while (pos) {
+	for (int i = 0; i < cnt; i++) {
 		std::cout << pos->data << " ";
 		pos = pos->next;
 	}
@@ -44,11 +41,13 @@ void Print() {
 
 void Append(int data) {
 	Node* new_node = (Node*)malloc(sizeof(Node));
+	
 	new_node->data = data;
-
 	new_node->prev = list->tail->prev;
+	
 	list->tail->prev->next = new_node;
 	list->tail->prev = new_node;
+	
 	new_node->next = list->tail;
 
 	cnt++;
@@ -60,7 +59,7 @@ void Insert(int position, int data) {
 	}
 	else {
 		Node* pos = list->head->next;
-		for (int i = 0; i < cnt; i++) {
+		for (int i = 0; i < position; i++) {
 			pos = pos->next;
 		}
 
@@ -80,7 +79,7 @@ void Insert(int position, int data) {
 int Delete(int position, int* value) {
 	if (position <= cnt) {
 		Node* pos = list->head->next;
-		for (int i = 0; i < cnt; i++) {
+		for (int i = 0; i < position; i++) {
 			pos = pos->next;
 		}
 		pos->prev->next = pos->next;

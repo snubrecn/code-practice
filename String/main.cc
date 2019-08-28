@@ -11,8 +11,7 @@ int strLen(char* str) {
 }
 
 void strCpy(char* src, char* dst) {
-	int i = 0;
-	while (dst[i] = src[i++]);
+	while (*dst++ = *src++);
 }
 
 int strCmp(char* s_1, char* s_2) {
@@ -24,15 +23,13 @@ int strCmp(char* s_1, char* s_2) {
 		i++;
 	}
 
-	if (s_1[i] == '\0') return 0;
-	
-	
 	if (s_1[i] > s_2[i]) {
 		return 1;
 	}
-	else {
+	else if (s_1[i] < s_2[i] {
 		return -1;
 	}
+	return 0;
 }
 
 int my_atoi(char* str) {

@@ -133,14 +133,12 @@ void Init() {
 Node* Search(const char* title) {
 	int key = Hash(title);
 	Node* curr = titles[key]->head->next;
-	if (curr) {
-		while (curr->next) {
-			curr->movie->title_;
-			if (StrCmp(title, curr->movie->title_) == 0) {
-				return curr;
-			}
-			curr = curr->next;
+	while (curr->next) {
+		curr->movie->title_;
+		if (StrCmp(title, curr->movie->title_) == 0) {
+			return curr;
 		}
+		curr = curr->next;
 	}
 	return nullptr;
 }
@@ -164,17 +162,11 @@ void Add(const Movie& movie) {
 
 	// Add to the Title Table
 	Node* curr = titles[key]->head->next;
-	if (curr) {
-		new_title_node->prev = curr->prev;
-		new_title_node->next = curr;
+	new_title_node->prev = curr->prev;
+	new_title_node->next = curr;
 
-		curr->prev->next = new_title_node;
-		curr->prev = new_title_node;
-	}
-	else {
-		titles[key]->head->next = new_title_node;
-		new_title_node->prev = titles[key]->head;
-	}
+	curr->prev->next = new_title_node;
+	curr->prev = new_title_node;
 
 	// Add to the Year Table
 	curr = years[movie.year_]->head->next;
@@ -190,14 +182,7 @@ void Add(const Movie& movie) {
 		}
 		else if (movie.rating_ == curr->movie->rating_) {
 			while (curr->next) {
-				if (movie.running_time_ <= curr->movie->running_time_) {
-					new_year_node->prev = curr->prev;
-					new_year_node->next = curr;
-					curr->prev->next = new_year_node;
-					curr->prev = new_year_node;
-					break;
-				}
-				if (movie.rating_ != curr->movie->rating_) {
+				if (movie.running_time_ <= curr->movie->running_time_ || movie.rating_ != curr->movie->rating_) {
 					new_year_node->prev = curr->prev;
 					new_year_node->next = curr;
 					curr->prev->next = new_year_node;
@@ -230,14 +215,7 @@ void Add(const Movie& movie) {
 		}
 		else if (movie.year_ == curr->movie->year_) {
 			while (curr->next) {
-				if (movie.running_time_ <= curr->movie->running_time_) {
-					new_rating_node->prev = curr->prev;
-					new_rating_node->next = curr;
-					curr->prev->next = new_rating_node;
-					curr->prev = new_rating_node;
-					break;
-				}
-				if (movie.year_ != curr->movie->year_) {
+				if (movie.running_time_ <= curr->movie->running_time_ || movie.year_ != curr->movie->year_) {
 					new_rating_node->prev = curr->prev;
 					new_rating_node->next = curr;
 					curr->prev->next = new_rating_node;
@@ -302,6 +280,42 @@ void ShowMoviesAtRating(const int rating) {
 	}
 }
 
+void Free() {
+	for (size_t i = 0; i < MAX_TABLE; i++) {
+		Node* pos = titles[i]->head->next;
+		while (pos) {
+			if (pos->next) {
+				free(pos->movie);
+				free(pos->prev);
+			}
+			else {
+				free(pos->prev);
+			}
+			pos = pos->next;
+		}
+		free(titles[i]->tail);
+		free(titles[i]);
+	}
+	for (size_t i = 0; i <= MAX_YEAR; i++) {
+		Node* pos = years[i]->head->next;
+		while (pos) {
+			free(pos->prev);
+			pos = pos->next;
+		}
+		free(years[i]->tail);
+		free(years[i]);
+	}
+	for (size_t i = 0; i <= MAX_RATING; i++) {
+		Node* pos = ratings[i]->head->next;
+		while (pos) {
+			free(pos->prev);
+			pos = pos->next;
+		}
+		free(ratings[i]->tail);
+		free(ratings[i]);
+	}
+}
+
 int main(void) {
 	Init();
 
@@ -346,5 +360,6 @@ int main(void) {
 		ShowMoviesAtRating(i);
 	}
 
+	Free();
 	return 0;
 }

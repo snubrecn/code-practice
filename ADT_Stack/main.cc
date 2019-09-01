@@ -5,70 +5,66 @@
 using namespace std;
 
 int stack[CAPACITY];
-int top_;
+int top;
 
-bool isFull() {
-    return top_ == CAPACITY;
+bool IsFull() { return top == CAPACITY; }
+
+bool IsEmpty() { return top == 0; }
+
+void Push(int data) {
+  if (IsFull()) {
+    cout << "Stack Overflow\n";
+    return;
+  }
+  stack[top++] = data;
 }
 
-bool isEmpty() {
-    return top_ == 0;
+void Pop() {
+  if (IsEmpty()) {
+    cout << "Stack Empty\n";
+    return;
+  }
+  top--;
 }
 
-void push(int data) {
-    if(isFull()) {
-        cout << "Stack Overflow\n";
-        return;
-    }
-    stack[top_++] = data;
+int Top() {
+  if (IsEmpty()) {
+    cout << "Stack Empty\n";
+    return INT_MIN;
+  }
+  return stack[top - 1];
 }
 
-void pop() {
-    if(isEmpty()) {
-        cout << "Stack Empty\n";
-        return;
-    }
-    top_--;
-}
-
-int top() {
-    if(isEmpty()) {
-        cout << "Stack Empty\n";
-        return INT_MIN;
-    }
-    return stack[top_ - 1];
-}
-
-void printStack() {
-    cout << "[";
-    for(int i = 0; i < top_; i++) {
-        cout << stack[i] << " ";
-    }
-    cout << "]" << endl;
+void PrintStack() {
+  cout << "[";
+  for (int i = 0; i < top; i++) {
+    cout << stack[i] << " ";
+  }
+  cout << "]" << endl;
 }
 
 int main(void) {
-    printStack();
-    pop();
+  PrintStack();
+  Pop();
 
-    push(10);
-    printStack();
-    push(20);
-    printStack();
-    push(-30);
-    printStack();
+  Push(10);
+  PrintStack();
+  Push(20);
+  PrintStack();
+  Push(-30);
+  PrintStack();
 
-    for(int i = 0; i < CAPACITY; i++) {
-        push(i);
-        printStack();
-        cout << "Current top: " << top() << endl;
-    }
+  for (int i = 0; i < CAPACITY; i++) {
+    Push(i);
+    PrintStack();
+    cout << "Current Top: " << Top() << endl;
+  }
 
-    for(int i = 0; i < CAPACITY + 3; i++) {
-        pop();
-        printStack();
-        cout << "Current top: " << top() << endl;
-    }
+  for (int i = 0; i < CAPACITY + 3; i++) {
+    Pop();
+    PrintStack();
+    cout << "Current Top: " << Top() << endl;
+  }
 
-	return 0;
+  return 0;
 }

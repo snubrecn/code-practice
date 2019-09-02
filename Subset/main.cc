@@ -1,51 +1,47 @@
 #include <iostream>
 #define NUM 5
-using namespace std;
 
 char set[NUM] = {'a', 98, 99, 'd', 'e'};
-
-int n;
 int a[NUM];
 
-void printSubset() {
-  for (int i = 1; i <= n; i++) {
-    if (a[i]) {
-      cout << set[i - 1] << " ";
-    }
-  }
-  cout << endl;
-}
-
-void allSubsetBit(int num /*number of elements in a set*/) {
+void PrintSubsetsBit(int num /*number of elements*/) {
   for (int i = 0; i < 1 << num; i++) {
+    std::cout << "[ ";
     for (int j = 0; j < num; j++) {
       if (i & (1 << j)) {
-        cout << set[j] << " ";
+        std::cout << set[j] << " ";
       }
     }
-    cout << endl;
+    std::cout << "]\n";
   }
 }
 
-void subset(int k /*level*/) {
-  if (k == n) {
-    printSubset();
+void PrintSubsetsBacktracking(int k /*level*/, int num /*number of elements*/) {
+  if (k == num) {
+    std::cout << "[ ";
+    for (int i = 0; i < num; i++) {
+      if (a[i]) {
+        std::cout << set[i] << " ";
+      }
+    }
+    std::cout << "]\n";
     return;
   }
   k++;
-  a[k] = 1;
-  subset(k);
-  a[k] = 0;
-  subset(k);
+
+  a[k - 1] = 1;
+  PrintSubsetsBacktracking(k, num);
+
+  a[k - 1] = 0;
+  PrintSubsetsBacktracking(k, num);
 }
 
 int main(void) {
-  int num_element = 5;
-  n = num_element;
+  std::cout << "Print all subsets by using bit operation\n";
+  PrintSubsetsBit(NUM);
 
-  // allSubsetBit(num_element);
-
-  subset(0);
+  std::cout << "Print all subsets by backtracking\n";
+  PrintSubsetsBacktracking(0, NUM);
 
   return 0;
 }

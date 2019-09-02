@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.2.0)
 
 project(code_practice)
 
+add_compile_options(-std=c++11)
 add_subdirectory(ADT_Stack)
 add_subdirectory(ADT_Queue)
 add_subdirectory(Sorting)
@@ -12,3 +13,4 @@ add_subdirectory(LinkedNodes)
 add_subdirectory(LinkedList)
 add_subdirectory(ChainingHashTable_Mod)
 add_subdirectory(Movie)
+add_subdirectory(Fibonacci)

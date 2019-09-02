@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.2.0)
 project(code_practice)
 
 add_compile_options(-std=c++11)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/binary)
 add_subdirectory(ADT_Stack)
 add_subdirectory(ADT_Queue)
 add_subdirectory(Sorting)

@@ -27,11 +27,10 @@ int StrCmp(char* s_1, char* s_2) {
 
   if (s_1[i] > s_2[i]) {
     return 1;
-        }
-    else if (s_1[i] < s_2[i]) {
+  } else if (s_1[i] < s_2[i]) {
     return -1;
-	}
-	return 0;
+  }
+  return 0;
 }
 
 int Atoi(char* str) {

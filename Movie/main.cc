@@ -13,8 +13,8 @@
  *    If years are the same, show in ascending order of running time.
  */
 
-#include <iostream>
 #include <malloc.h>
+#include <iostream>
 #define MAX_TABLE 10
 #define MAX_YEAR 2020
 #define MAX_RATING 10
@@ -41,9 +41,10 @@ void StrCpy(char* dst, const char* src) {
 }
 
 int StrLen(const char* str) {
-    int i = 0;
-    while (str[i++]);
-    return i - 1;
+  int i = 0;
+  while (str[i++])
+    ;
+  return i - 1;
 }
 
 struct Movie {

@@ -100,6 +100,30 @@ void Dijkstra(int start, int end) {
   }
 }
 
+void DFS(int curr, int end, int sum_dist, int min_dist) {
+  if (sum_dist == 0) {
+    Init();
+    // curr is start
+    dist[curr] = 0;
+  }
+
+  if (curr == end) {
+    if (sum_dist < min_dist) {
+      min_dist = sum_dist;
+      dist[end] = sum_dist;
+    }
+    return;
+  }
+
+  for (int i = 1; i <= V; i++) {
+    if (dist[i] > dist[curr] + adjacent[curr][i]) {
+      dist[i] = dist[curr] + adjacent[curr][i];
+      parent[i] = curr;
+      DFS(i, end, sum_dist + adjacent[curr][i], min_dist);
+    }
+  }
+}
+
 int main(void) {
   for (int i = 0; i < MAX; i++) {
     for (int j = 0; j < MAX; j++) {
@@ -121,12 +145,32 @@ int main(void) {
   int v_start = 1;
   int v_end = 6;
 
-  //    Iteration(v_start);
-  //    BFS(v_start);
+  Iteration(v_start);
+  std::cout << "Iteration-based shortest path result: \n";
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
+            << std::endl;
+  std::cout << "Path: ";
+  PrintPath(v_start, v_end);
+
+  BFS(v_start);
+  std::cout << "Breadth-First-Search shortest path result: \n";
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
+            << std::endl;
+  std::cout << "Path: ";
+  PrintPath(v_start, v_end);
+
   Dijkstra(v_start, v_end);
+  std::cout << "Dijkstra shortest path result: \n";
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
+            << std::endl;
+  std::cout << "Path: ";
+  PrintPath(v_start, v_end);
 
-  std::cout << dist[v_end] << std::endl;
-
+  DFS(v_start, v_end, 0, INF);
+  std::cout << "Depth-First-Search shortest path result: \n";
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
+            << std::endl;
+  std::cout << "Path: ";
   PrintPath(v_start, v_end);
 
   return 0;

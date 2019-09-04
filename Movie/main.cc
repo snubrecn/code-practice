@@ -107,39 +107,30 @@ unsigned long Hash(const char* str) {
   return hash % MAX_TABLE;
 }
 
+void InitList(List** list_ptr, int length) {
+  for (size_t i = 0; i < length; i++) {
+    list_ptr[i] = new List;
+    list_ptr[i]->head = new Node;
+    list_ptr[i]->tail = new Node;
+
+    list_ptr[i]->head->next = list_ptr[i]->tail;
+    list_ptr[i]->head->prev = NULL;
+    list_ptr[i]->tail->prev = list_ptr[i]->head;
+    list_ptr[i]->tail->next = NULL;
+  }
+}
+
 void Init() {
-  for (size_t i = 0; i < MAX_TABLE; i++) {
-    titles[i] = new List;
-    titles[i]->head = new Node;
-    titles[i]->tail = new Node;
+  InitList(titles, MAX_TABLE);
+  InitList(years, MAX_YEAR + 1);
+  InitList(ratings, MAX_RATING + 1);
+}
 
-    titles[i]->head->next = titles[i]->tail;
-    titles[i]->head->prev = NULL;
-    titles[i]->tail->prev = titles[i]->head;
-    titles[i]->tail->next = NULL;
-  }
-
-  for (size_t i = 0; i <= MAX_YEAR; i++) {
-    years[i] = new List;
-    years[i]->head = new Node;
-    years[i]->tail = new Node;
-
-    years[i]->head->next = years[i]->tail;
-    years[i]->head->prev = NULL;
-    years[i]->tail->prev = years[i]->head;
-    years[i]->tail->next = NULL;
-  }
-
-  for (size_t i = 0; i <= MAX_RATING; i++) {
-    ratings[i] = new List;
-    ratings[i]->head = new Node;
-    ratings[i]->tail = new Node;
-
-    ratings[i]->head->next = ratings[i]->tail;
-    ratings[i]->head->prev = NULL;
-    ratings[i]->tail->prev = ratings[i]->head;
-    ratings[i]->tail->next = NULL;
-  }
+void LinkAtFront(Node* new_node, Node* curr) {
+  new_node->next = curr;
+  new_node->prev = curr->prev;
+  curr->prev->next = new_node;
+  curr->prev = new_node;
 }
 
 Node* Search(const char* title) {
@@ -174,31 +165,20 @@ void Add(const Movie& movie) {
 
   // Add to the Title Table
   Node* curr = titles[key]->head->next;
-  new_title_node->prev = curr->prev;
-  new_title_node->next = curr;
-
-  curr->prev->next = new_title_node;
-  curr->prev = new_title_node;
+  LinkAtFront(new_title_node, curr);
 
   // Add to the Year Table
   curr = years[movie.year_]->head->next;
 
   while (curr->next) {
     if (movie.rating_ > curr->movie->rating_) {
-      new_year_node->prev = curr->prev;
-      new_year_node->next = curr;
-
-      curr->prev->next = new_year_node;
-      curr->prev = new_year_node;
+      LinkAtFront(new_year_node, curr);
       break;
     } else if (movie.rating_ == curr->movie->rating_) {
       while (curr->next) {
         if (movie.running_time_ <= curr->movie->running_time_ ||
             movie.rating_ != curr->movie->rating_) {
-          new_year_node->prev = curr->prev;
-          new_year_node->next = curr;
-          curr->prev->next = new_year_node;
-          curr->prev = new_year_node;
+          LinkAtFront(new_year_node, curr);
           break;
         }
         curr = curr->next;
@@ -208,30 +188,20 @@ void Add(const Movie& movie) {
     curr = curr->next;
   }
   if (curr->next == NULL) {  // curr is tail
-    new_year_node->next = curr;
-    new_year_node->prev = curr->prev;
-
-    curr->prev->next = new_year_node;
-    curr->prev = new_year_node;
+    LinkAtFront(new_year_node, curr);
   }
 
   // Add to the Rating Table
   curr = ratings[movie.rating_]->head->next;
   while (curr->next) {
     if (movie.year_ < curr->movie->year_) {
-      new_rating_node->prev = curr->prev;
-      curr->prev->next = new_rating_node;
-      new_rating_node->next = curr;
-      curr->prev = new_rating_node;
+      LinkAtFront(new_rating_node, curr);
       break;
     } else if (movie.year_ == curr->movie->year_) {
       while (curr->next) {
         if (movie.running_time_ <= curr->movie->running_time_ ||
             movie.year_ != curr->movie->year_) {
-          new_rating_node->prev = curr->prev;
-          new_rating_node->next = curr;
-          curr->prev->next = new_rating_node;
-          curr->prev = new_rating_node;
+          LinkAtFront(new_rating_node, curr);
           break;
         }
         curr = curr->next;
@@ -241,10 +211,7 @@ void Add(const Movie& movie) {
     curr = curr->next;
   }
   if (curr->next == NULL) {  // curr is tail
-    new_rating_node->prev = curr->prev;
-    new_rating_node->next = curr;
-    curr->prev->next = new_rating_node;
-    curr->prev = new_rating_node;
+    LinkAtFront(new_rating_node, curr);
   }
 }
 

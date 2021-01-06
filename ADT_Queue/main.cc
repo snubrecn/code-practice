@@ -1,7 +1,6 @@
 #include <iostream>
 #define CAPACITY 20
-#define INT_MAX 0x7fffffff
-#define USE_LINEAR_QUEUE
+//#define USE_LINEAR_QUEUE
 
 using namespace std;
 
@@ -17,13 +16,13 @@ bool IsFull() { return rear == CAPACITY; }
 
 bool IsEmpty() { return front == rear; }
 
-int Enqueue(int data) {
+bool Enqueue(int data) {
   if (IsFull()) {
     cout << "Queue Overflow\n";
-    return 0;
+    return false;
   }
   q[rear++] = data;
-  return 1;
+  return true;
 }
 
 /**
@@ -31,13 +30,13 @@ int Enqueue(int data) {
   actual capacity of linear queue is decreased by 1
   (actual capacity: CAPACITY - front)
  */
-int Dequeue(int* data) {
+bool Dequeue(int* data) {
   if (IsEmpty()) {
     cout << "Queue Empty\n";
-    return 0;
+    return false;
   }
   *data = q[front++];
-  return 1;
+  return true;
 }
 
 void PrintQueue() {
@@ -49,6 +48,40 @@ void PrintQueue() {
 }
 
 #else  // USE_CIRCULAR_QUEUE
+
+bool IsEmpty() { return front == rear; }
+
+bool IsFull() { return (rear + 1) % CAPACITY == front; }
+
+bool Enqueue(int data) {
+  if (IsFull()) {
+    cout << "Queue Overflow!\n";
+    return false;
+  }
+  c_q_cnt++;
+  q[rear] = data;
+  rear = (rear + 1) % CAPACITY;
+  return true;
+}
+
+bool Dequeue(int* data) {
+  if (IsEmpty()) {
+    cout << "Queue Empty\n";
+    return false;
+  }
+  c_q_cnt--;
+  *data = q[front];
+  front = (front + 1) % CAPACITY;
+  return true;
+}
+
+void PrintQueue() {
+  cout << "[";
+  for (int i = 0; i < c_q_cnt; i++) {
+    cout << q[(front + i) % CAPACITY] << " ";
+  }
+  cout << "]\n";
+}
 
 #endif
 
@@ -74,8 +107,8 @@ int main(void) {
 
   for (int i = 0; i < CAPACITY; i++) {
     Dequeue(&dequeued_val);
-    PrintQueue();
     cout << "De-queued value: " << dequeued_val << endl;
+    PrintQueue();
   }
 
   return 0;

@@ -1,8 +1,30 @@
+#include <algorithm>
+#include <chrono>
+#include <functional>
 #include <iostream>
-#define LEN 10
+#include <random>
 #define INT_MAX 0x7fffffff;
 
-int src[LEN] = {9, 4, 2, 8, 10, 5, 1, 3, 6, 7};
+void MeasureExecutionTime(int* src, int len, std::function<void(int* src, int len)> execution) {
+  std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+  execution(src, len);
+  std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+
+  std::cout << "Execution time: " << (t2 - t1).count() * 1e-9 << " secs\n";
+}
+
+void MeasureExecutionTime(int* src, int s, int e,
+                          std::function<void(int* src, int s, int e)> execution) {
+  std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+  execution(src, s, e);
+  std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+
+  std::cout << "Execution time: " << (t2 - t1).count() * 1e-9 << " secs\n";
+}
+
+void CopyArray(int* src, int* dst, int len) {
+  for (int i = 0; i < len; i++) *(dst + i) = *(src + i);
+}
 
 void BubbleSort(int* src, int len) {
   for (int i = 0; i < len; i++) {
@@ -53,24 +75,19 @@ void MergeSort(int* src, int s, int e) {  // end index e : exclusive
     int s_1 = s;
     int s_2 = m;
     int idx = 0;
-    int tmp[LEN];
+    int* tmp = new int[e];
 
-    while (s_1 < m && s_2 < e) {
-      if (src[s_1] < src[s_2]) {
+    while (s_1 < m && s_2 < e)
+      if (src[s_1] < src[s_2])
         tmp[idx++] = src[s_1++];
-      } else {
+      else
         tmp[idx++] = src[s_2++];
-      }
-    }
-    while (s_1 < m) {
-      tmp[idx++] = src[s_1++];
-    }
-    while (s_2 < e) {
-      tmp[idx++] = src[s_2++];
-    }
-    for (int i = 0; i < idx; i++) {
-      src[s + i] = tmp[i];
-    }
+    while (s_1 < m) tmp[idx++] = src[s_1++];
+    while (s_2 < e) tmp[idx++] = src[s_2++];
+
+    for (int i = 0; i < idx; i++) src[s + i] = tmp[i];
+
+    delete[] tmp;
   }
 }
 
@@ -78,23 +95,45 @@ void QuickSort(int* src, int s, int e) {}
 
 void PrintArray(int* src, int len) {
   std::cout << "[";
-  for (int i = 0; i < len; i++) {
-    std::cout << src[i] << " ";
-  }
+  for (int i = 0; i < len; i++) std::cout << src[i] << " ";
   std::cout << "]\n";
 }
 
 int main(void) {
-  int len = LEN;
-  std::cout << "Before sorting\n";
+  int len = 10000;
+  std::vector<int> vector;
+  vector.resize(len);
+  for (int i = 0; i < len; ++i) vector[i] = i;
+  auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::shuffle(vector.begin(), vector.end(), std::default_random_engine(seed));
+  int* arr = new int[len];
+  int* arr_tmp = new int[len];
+  for (int i = 0; i < len; ++i) arr[i] = arr_tmp[i] = vector[i];
 
-  PrintArray(src, len);
-  // BubbleSort(src, len);
-  // SelectionSort(src, len);
-  // InsertionSort(src, len);
-  // MergeSort(src, 0, len);
+  //  std::cout << "Original array\n";
+  //  PrintArray(arr, len);
 
-  std::cout << "After sorting\n";
-  PrintArray(src, len);
+  std::cerr << "Bubble Sort Result\n";
+  MeasureExecutionTime(arr_tmp, len, BubbleSort);
+  //  PrintArray(arr_tmp, len);
+
+  std::cerr << "Selection Sort Result\n";
+  CopyArray(arr, arr_tmp, len);
+  MeasureExecutionTime(arr_tmp, len, SelectionSort);
+  //  PrintArray(arr_tmp, len);
+
+  std::cerr << "Insertion Sort Result\n";
+  CopyArray(arr, arr_tmp, len);
+  MeasureExecutionTime(arr_tmp, len, InsertionSort);
+  //  PrintArray(arr_tmp, len);
+
+  std::cerr << "Merge Sort Result\n";
+  CopyArray(arr, arr_tmp, len);
+  MeasureExecutionTime(arr_tmp, 0, len, MergeSort);
+  //  PrintArray(arr_tmp, len);
+
+  delete[] arr_tmp;
+  delete[] arr;
+
   return 0;
 }

@@ -7,13 +7,11 @@
 int fibonacci[MAX];
 
 void MeasureExecutionTime(int n, std::function<void(int n)> execution) {
-  std::chrono::steady_clock::time_point start =
-      std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
   execution(n);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-  std::cout << "Execution time: " << (end - start).count() * 1e-9
-            << " secs\n\n";
+  std::cout << "Execution time: " << (end - start).count() * 1e-9 << " secs\n\n";
 }
 
 int FibonacciRecursive(int n) {
@@ -55,20 +53,17 @@ int main(void) {
     std::cin >> seq_num;
     MeasureExecutionTime(seq_num, [](int n) {
       std::cout << "Recursion\n";
-      std::cout << "Fibonacci[" << n << "]: " << FibonacciRecursive(n)
-                << std::endl;
+      std::cout << "Fibonacci[" << n << "]: " << FibonacciRecursive(n) << std::endl;
     });
 
     MeasureExecutionTime(seq_num, [](int n) {
       std::cout << "Bottom-up dynamic programming\n";
-      std::cout << "Fibonacci[" << n << "]: " << FibonacciBottomUp(n)
-                << std::endl;
+      std::cout << "Fibonacci[" << n << "]: " << FibonacciBottomUp(n) << std::endl;
     });
 
     MeasureExecutionTime(seq_num, [](int n) {
       std::cout << "Top-down dynamic programming\n";
-      std::cout << "Fibonacci[" << n << "]: " << FibonacciTopDown(n)
-                << std::endl;
+      std::cout << "Fibonacci[" << n << "]: " << FibonacciTopDown(n) << std::endl;
     });
   }
 

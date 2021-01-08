@@ -1,14 +1,12 @@
 #include <iostream>
-
 #define MAX_LEN 30
 
 using namespace std;
 
 int StrLen(char* str) {
   int i = 0;
-  while (str[i++])
-    ;
-  return i - 1;
+  while (*str++) i++;
+  return i;
 }
 
 void StrCpy(char* src, char* dst) {
@@ -19,9 +17,7 @@ void StrCpy(char* src, char* dst) {
 int StrCmp(char* s_1, char* s_2) {
   int i = 0;
   while (s_1[i]) {
-    if (s_1[i] != s_2[i]) {
-      break;
-    }
+    if (s_1[i] != s_2[i]) break;
     i++;
   }
 
@@ -36,7 +32,6 @@ int StrCmp(char* s_1, char* s_2) {
 int Atoi(char* str) {
   int i = 0;
   int sign = 1;
-
   int num = 0;
 
   while (str[i]) {
@@ -47,9 +42,7 @@ int Atoi(char* str) {
         continue;
       }
     }
-    if (str[i] < '0' || str[i] > '9') {
-      break;
-    }
+    if (str[i] < '0' || str[i] > '9') break;
     int decipher = str[i] - '0';
     num = num * 10 + decipher;
     i++;
@@ -87,9 +80,7 @@ void Itoa(int num, char* dst) {
   }
 
   if (sign == -1) {
-    for (int j = i; j--; j == 0) {
-      dst[j + 1] = dst[j];
-    }
+    for (int j = i; j--; j == 0) dst[j + 1] = dst[j];
     dst[0] = '-';
     i++;
   }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <iostream>
 #define MAX 100
 #define INF 100000
@@ -147,29 +148,25 @@ int main(void) {
 
   Iteration(v_start);
   std::cout << "Iteration-based shortest path result: \n";
-  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
-            << std::endl;
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end] << std::endl;
   std::cout << "Path: ";
   PrintPath(v_start, v_end);
 
   BFS(v_start);
   std::cout << "Breadth-First-Search shortest path result: \n";
-  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
-            << std::endl;
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end] << std::endl;
   std::cout << "Path: ";
   PrintPath(v_start, v_end);
 
   Dijkstra(v_start, v_end);
   std::cout << "Dijkstra shortest path result: \n";
-  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
-            << std::endl;
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end] << std::endl;
   std::cout << "Path: ";
   PrintPath(v_start, v_end);
 
   DFS(v_start, v_end, 0, INF);
   std::cout << "Depth-First-Search shortest path result: \n";
-  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end]
-            << std::endl;
+  std::cout << "Dist from " << v_start << " to " << v_end << ": " << dist[v_end] << std::endl;
   std::cout << "Path: ";
   PrintPath(v_start, v_end);
 

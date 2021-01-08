@@ -1,12 +1,6 @@
 #include <iostream>
-
 #define LEN 10
 #define INT_MAX 0x7fffffff;
-
-// To do: Add random int generator to make unsorted array of arbitrary length
-// Compare time consumption of different sorting methods.
-
-using namespace std;
 
 int src[LEN] = {9, 4, 2, 8, 10, 5, 1, 3, 6, 7};
 
@@ -83,16 +77,16 @@ void MergeSort(int* src, int s, int e) {  // end index e : exclusive
 void QuickSort(int* src, int s, int e) {}
 
 void PrintArray(int* src, int len) {
-  cout << "[";
+  std::cout << "[";
   for (int i = 0; i < len; i++) {
-    cout << src[i] << " ";
+    std::cout << src[i] << " ";
   }
-  cout << "]\n";
+  std::cout << "]\n";
 }
 
 int main(void) {
   int len = LEN;
-  cout << "Before sorting\n";
+  std::cout << "Before sorting\n";
 
   PrintArray(src, len);
   // BubbleSort(src, len);
@@ -100,7 +94,7 @@ int main(void) {
   // InsertionSort(src, len);
   // MergeSort(src, 0, len);
 
-  cout << "After sorting\n";
+  std::cout << "After sorting\n";
   PrintArray(src, len);
   return 0;
 }

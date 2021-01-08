@@ -7,8 +7,7 @@ using namespace std;
 int left_c[MAX] = {0 /*unused*/, 2, 4, 6, 8, 10};
 int right_c[MAX] = {1 /*unused*/, 3, 5, 7, 9};
 
-int src[2 * (MAX + 1)] = {0 /*unused*/, 97,  98,  99,  100,
-                          101,          102, 103, 104, 105};
+int src[2 * (MAX + 1)] = {0 /*unused*/, 97, 98, 99, 100, 101, 102, 103, 104, 105};
 
 void BFS(int start) {
   int queue[2 * (MAX + 1)];

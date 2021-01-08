@@ -14,6 +14,7 @@
  */
 
 #include <malloc.h>
+
 #include <iostream>
 #define MAX_TABLE 10
 #define MAX_YEAR 2020
@@ -60,9 +61,7 @@ struct Movie {
     }
   }
   Movie(const Movie& movie)
-      : year_(movie.year_),
-        rating_(movie.rating_),
-        running_time_(movie.running_time_) {
+      : year_(movie.year_), rating_(movie.rating_), running_time_(movie.running_time_) {
     title_ = new char[StrLen(movie.title_) + 1];
     StrCpy(title_, movie.title_);
   }
@@ -219,11 +218,9 @@ void ShowMovieInfo(const char* title) {
   Node* movie_node = Search(title);
 
   if (movie_node) {
-    std::cout << movie_node->movie->title_ << " was produced in "
-              << movie_node->movie->year_ << " and rated at "
-              << movie_node->movie->rating_ << ".\n";
-    std::cout << "Its running time is " << movie_node->movie->running_time_
-              << " minutes\n\n";
+    std::cout << movie_node->movie->title_ << " was produced in " << movie_node->movie->year_
+              << " and rated at " << movie_node->movie->rating_ << ".\n";
+    std::cout << "Its running time is " << movie_node->movie->running_time_ << " minutes\n\n";
   } else {
     std::cout << "Movie " << title << " is not in the DB.\n\n";
   }
@@ -235,8 +232,8 @@ void ShowMoviesInYear(const int year) {
   if (curr->next) {
     std::cout << "Movies produced in " << year << "\n";
     while (curr->next) {
-      std::cout << "'" << curr->movie->title_ << " (" << curr->movie->rating_
-                << ", " << curr->movie->running_time_ << " mins)'\n";
+      std::cout << "'" << curr->movie->title_ << " (" << curr->movie->rating_ << ", "
+                << curr->movie->running_time_ << " mins)'\n";
       curr = curr->next;
     }
     std::cout << "\n";
@@ -250,8 +247,8 @@ void ShowMoviesAtRating(const int rating) {
   if (curr->next) {
     std::cout << "Movies at rating " << rating << "\n";
     while (curr->next) {
-      std::cout << "'" << curr->movie->title_ << " (" << curr->movie->year_
-                << ", " << curr->movie->running_time_ << " mins)'\n";
+      std::cout << "'" << curr->movie->title_ << " (" << curr->movie->year_ << ", "
+                << curr->movie->running_time_ << " mins)'\n";
       curr = curr->next;
     }
     std::cout << "\n";

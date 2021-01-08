@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <stdlib.h>
+
 #include <iostream>
 
 #define MAX_HASH 10

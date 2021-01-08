@@ -2,16 +2,13 @@
 #define NUM 5
 
 char set[NUM] = {'a', 98, 99, 'd', 'e'};
-int a[NUM];
+bool a[NUM];
 
-void PrintSubsetsBit(int num /*number of elements*/) {
+void PrintSubsetsBit(int num) {
   for (int i = 0; i < 1 << num; i++) {
     std::cout << "[ ";
-    for (int j = 0; j < num; j++) {
-      if (i & (1 << j)) {
-        std::cout << set[j] << " ";
-      }
-    }
+    for (int j = 0; j < num; j++)
+      if (i & (1 << j)) std::cout << set[j] << " ";
     std::cout << "]\n";
   }
 }
@@ -19,21 +16,17 @@ void PrintSubsetsBit(int num /*number of elements*/) {
 void PrintSubsetsBacktracking(int k /*level*/, int num /*number of elements*/) {
   if (k == num) {
     std::cout << "[ ";
-    for (int i = 0; i < num; i++) {
-      if (a[i]) {
-        std::cout << set[i] << " ";
-      }
-    }
+    for (int i = 0; i < num; i++)
+      if (a[i]) std::cout << set[i] << " ";
     std::cout << "]\n";
     return;
   }
-  k++;
 
-  a[k - 1] = 1;
-  PrintSubsetsBacktracking(k, num);
+  a[k] = true;
+  PrintSubsetsBacktracking(k + 1, num);
 
-  a[k - 1] = 0;
-  PrintSubsetsBacktracking(k, num);
+  a[k] = false;
+  PrintSubsetsBacktracking(k + 1, num);
 }
 
 int main(void) {

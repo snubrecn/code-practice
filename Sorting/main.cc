@@ -66,29 +66,30 @@ void SelectionSort(int* src, int len) {
   }
 }
 
-void MergeSort(int* src, int s, int e) {  // end index e : exclusive
-  if (s < e - 1) {
-    int m = (s + e) / 2;
-    MergeSort(src, s, m);
-    MergeSort(src, m, e);
+// s: inclusive start
+// e: exclusisve end
+void MergeSort(int* src, int s, int e) {
+  if (s >= e - 1) return;
+  int m = (s + e) / 2;
+  MergeSort(src, s, m);
+  MergeSort(src, m, e);
 
-    int s_1 = s;
-    int s_2 = m;
-    int idx = 0;
-    int* tmp = new int[e];
+  int* tmp = new int[e- s];
+  int idx = 0;
+  int s1 = s;
+  int s2 = m;
 
-    while (s_1 < m && s_2 < e)
-      if (src[s_1] < src[s_2])
-        tmp[idx++] = src[s_1++];
-      else
-        tmp[idx++] = src[s_2++];
-    while (s_1 < m) tmp[idx++] = src[s_1++];
-    while (s_2 < e) tmp[idx++] = src[s_2++];
-
-    for (int i = 0; i < idx; i++) src[s + i] = tmp[i];
-
-    delete[] tmp;
+  while (s1 < m && s2 < e) {
+    if (src[s1] <= src[s2])
+      tmp[idx++] = src[s1++];
+    else
+      tmp[idx++] = src[s2++];
   }
+  while (s1 < m) tmp[idx++] = src[s1++];
+  while (s2 < e) tmp[idx++] = src[s2++];
+
+  for (int i = s; i < e; i++) src[i] = tmp[i - s];
+  delete[] tmp;
 }
 
 void QuickSort(int* src, int s, int e) {}

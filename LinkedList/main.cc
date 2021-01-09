@@ -1,140 +1,106 @@
-#include <malloc.h>
-
 #include <iostream>
 
-typedef struct node {
-  int data;
-  node* prev;
-  node* next;
-} Node;
+class LinkedList {
+ public:
+  LinkedList() { Init(); }
+  ~LinkedList() { Free(); }
 
-typedef struct linked_list {
-  Node* head;
-  Node* tail;
-  int cnt;
-} LinkedList;
-
-LinkedList* list;
-
-void Init() {
-  list = (LinkedList*)malloc(sizeof(LinkedList));
-  list->head = (Node*)malloc(sizeof(Node));
-  list->tail = (Node*)malloc(sizeof(Node));
-
-  list->head->prev = NULL;
-  list->tail->next = NULL;
-
-  list->head->next = list->tail;
-  list->tail->prev = list->head;
-
-  list->cnt = 0;
-}
-
-void Print() {
-  std::cout << "List count " << list->cnt << " elements: ";
-  Node* pos = list->head->next;
-
-  for (int i = 0; i < list->cnt; i++) {
-    std::cout << pos->data << " ";
-    pos = pos->next;
+  void Init() {
+    head_ = new Node();
+    tail_ = new Node();
+    head_->prev = nullptr;
+    head_->next = tail_;
+    tail_->prev = head_;
+    tail_->next = nullptr;
+    cnt_ = 0;
   }
-  std::cout << std::endl;
-}
 
-void Append(int data) {
-  Node* new_node = (Node*)malloc(sizeof(Node));
-
-  new_node->data = data;
-  new_node->prev = list->tail->prev;
-
-  list->tail->prev->next = new_node;
-  list->tail->prev = new_node;
-
-  new_node->next = list->tail;
-
-  list->cnt++;
-}
-
-void Insert(int position, int data) {
-  if (position >= list->cnt) {
-    Append(data);
-  } else {
-    Node* pos = list->head->next;
-    for (int i = 0; i < position; i++) {
+  void Print() {
+    Node* pos = head_->next;
+    std::cout << "list: ";
+    while (pos->next) {
+      std::cout << pos->data << " ";
       pos = pos->next;
     }
+    std::cout << std::endl;
+  }
 
-    Node* new_node = (Node*)malloc(sizeof(Node));
+  void Append(int data) {
+    Node* new_node = new Node();
     new_node->data = data;
-
-    new_node->next = pos->next;
-    new_node->prev = pos;
-
-    pos->next->prev = new_node;
-    pos->next = new_node;
-
-    list->cnt++;
+    new_node->prev = tail_->prev;
+    new_node->next = tail_;
+    tail_->prev->next = new_node;
+    tail_->prev = new_node;
+    cnt_++;
   }
-}
 
-int Delete(int position, int* value) {
-  if (position <= list->cnt) {
-    Node* pos = list->head->next;
-    for (int i = 0; i < position; i++) {
-      pos = pos->next;
-    }
+  void Insert(int position, int data) {
+    if (position > cnt_) return;
+    Node* pos = head_->next;
+    while (position--) pos = pos->next;
+    Node* new_data = new Node();
+    new_data->data = data;
+    new_data->prev = pos->prev;
+    new_data->next = pos;
+    pos->prev->next = new_data;
+    pos->prev = new_data;
+    cnt_++;
+  }
+
+  int Delete(int position, int* value) {
+    if (position >= cnt_) return 0;
+    Node* pos = head_->next;
+    while (position--) pos = pos->next;
+    *value = pos->data;
     pos->prev->next = pos->next;
     pos->next->prev = pos->prev;
-    *value = pos->data;
-    free(pos);
-    list->cnt--;
+    delete pos;
+    cnt_--;
     return 1;
-  } else {
-    std::cout << "List out of range\n";
-    return 0;
   }
-}
 
-void Free() {
-  Node* pos = list->head->next;
-  while (pos) {
-    free(pos->prev);
-    pos = pos->next;
+  void Free() {
+    Node* pos = head_->next;
+    while (pos->next) {
+      delete pos->prev;
+      pos = pos->next;
+    }
+    delete tail_;
+    cnt_ = 0;
   }
-  free(list->tail);
-  free(list);
-  list->cnt = 0;
-}
+
+ private:
+  struct Node {
+    int data;
+    Node* prev;
+    Node* next;
+  };
+  Node* head_;
+  Node* tail_;
+  int cnt_;
+};
 
 int main(void) {
-  Init();
+  LinkedList list;
+  list.Print();
+  list.Append(-3);
+  list.Print();
+  list.Append(-19);
+  list.Print();
+  list.Append(1);
+  list.Print();
+  list.Insert(1, -5);
+  list.Print();
+  list.Append(4);
+  list.Print();
+  list.Insert(2, 10);
+  list.Print();
 
   int value;
-
-  Print();
-
-  Append(0);
-  Print();
-  Append(1);
-  Print();
-  Append(2);
-  Print();
-  Append(3);
-  Append(4);
-  Append(5);
-  Append(6);
-  Insert(4, 10);
-  Print();
-
-  Insert(3, 10);
-  Print();
-
-  if (Delete(2, &value)) {
-    Print();
+  if (list.Delete(2, &value)) {
+    list.Print();
     std::cout << "Deleted value: " << value << std::endl;
   }
-
-  Free();
-
   return 0;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 
+// Doubly-linked list of integers
 class LinkedList {
  public:
   LinkedList() { Init(); }

@@ -3,6 +3,8 @@
 #include <functional>
 #include <iostream>
 #include <random>
+
+#include "heap.h"
 #define INT_MAX 0x7fffffff;
 
 void MeasureExecutionTime(int* src, int len, std::function<void(int* src, int len)> execution) {
@@ -72,6 +74,12 @@ void SelectionSort(int* src, int len) {
   }
 }
 
+void HeapSort(int* src, int len) {
+  heap::Heap heap(len);
+  for (int i = 0; i < len; ++i) heap.Push(src[i]);
+  for (int i = 0; i < len; ++i) heap.Pop(src + i);
+}
+
 // s: inclusive start
 // e: exclusisve end
 void MergeSort(int* src, int s, int e) {
@@ -119,13 +127,12 @@ void QuickSort(int* src, int s, int e) {
       src[back] = tmp;
     }
   }
-
   QuickSort(src, s, back - 1);
   QuickSort(src, back + 1, e);
 }
 
 int main(void) {
-  int len = 20000;
+  int len = 10000;
   std::vector<int> vector;
   vector.resize(len);
   for (int i = 0; i < len; ++i) vector[i] = i;
@@ -153,6 +160,10 @@ int main(void) {
   std::cerr << "Insertion Sort Result\n";
   CopyArray(arr, arr_tmp, len);
   MeasureExecutionTime(arr_tmp, len, InsertionSort);
+  if (print_array) PrintArray(arr_tmp, len);
+
+  std::cerr << "Heap Sort Result\n";
+  MeasureExecutionTime(arr_tmp, len, HeapSort);
   if (print_array) PrintArray(arr_tmp, len);
 
   std::cerr << "Merge Sort Result\n";

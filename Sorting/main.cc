@@ -26,6 +26,12 @@ void CopyArray(int* src, int* dst, int len) {
   for (int i = 0; i < len; i++) *(dst + i) = *(src + i);
 }
 
+void PrintArray(int* src, int len) {
+  std::cout << "[";
+  for (int i = 0; i < len; i++) std::cout << src[i] << " ";
+  std::cout << "]\n";
+}
+
 void BubbleSort(int* src, int len) {
   for (int i = 0; i < len; i++) {
     for (int j = 1; j < len - i; j++) {
@@ -74,7 +80,7 @@ void MergeSort(int* src, int s, int e) {
   MergeSort(src, s, m);
   MergeSort(src, m, e);
 
-  int* tmp = new int[e- s];
+  int* tmp = new int[e - s];
   int idx = 0;
   int s1 = s;
   int s2 = m;
@@ -92,16 +98,34 @@ void MergeSort(int* src, int s, int e) {
   delete[] tmp;
 }
 
-void QuickSort(int* src, int s, int e) {}
+// s: inclusive start
+// e: inclusive end
+void QuickSort(int* src, int s, int e) {
+  if (s >= e) return;
+  int pivot = src[s];
+  int front = s + 1;
+  int back = e;
 
-void PrintArray(int* src, int len) {
-  std::cout << "[";
-  for (int i = 0; i < len; i++) std::cout << src[i] << " ";
-  std::cout << "]\n";
+  while (front <= back) {
+    while (front <= e && src[front] <= pivot) front++;
+    while (back > s && src[back] >= pivot) back--;
+    if (front > back) {
+      int tmp = src[back];
+      src[back] = pivot;
+      src[s] = tmp;
+    } else {
+      int tmp = src[front];
+      src[front] = src[back];
+      src[back] = tmp;
+    }
+  }
+
+  QuickSort(src, s, back - 1);
+  QuickSort(src, back + 1, e);
 }
 
 int main(void) {
-  int len = 10000;
+  int len = 20000;
   std::vector<int> vector;
   vector.resize(len);
   for (int i = 0; i < len; ++i) vector[i] = i;
@@ -110,28 +134,36 @@ int main(void) {
   int* arr = new int[len];
   int* arr_tmp = new int[len];
   for (int i = 0; i < len; ++i) arr[i] = arr_tmp[i] = vector[i];
+  bool print_array = false;
 
-  //  std::cout << "Original array\n";
-  //  PrintArray(arr, len);
+  if (print_array) {
+    std::cout << "Original array\n";
+    PrintArray(arr, len);
+  }
 
   std::cerr << "Bubble Sort Result\n";
   MeasureExecutionTime(arr_tmp, len, BubbleSort);
-  //  PrintArray(arr_tmp, len);
+  if (print_array) PrintArray(arr_tmp, len);
 
   std::cerr << "Selection Sort Result\n";
   CopyArray(arr, arr_tmp, len);
   MeasureExecutionTime(arr_tmp, len, SelectionSort);
-  //  PrintArray(arr_tmp, len);
+  if (print_array) PrintArray(arr_tmp, len);
 
   std::cerr << "Insertion Sort Result\n";
   CopyArray(arr, arr_tmp, len);
   MeasureExecutionTime(arr_tmp, len, InsertionSort);
-  //  PrintArray(arr_tmp, len);
+  if (print_array) PrintArray(arr_tmp, len);
 
   std::cerr << "Merge Sort Result\n";
   CopyArray(arr, arr_tmp, len);
   MeasureExecutionTime(arr_tmp, 0, len, MergeSort);
-  //  PrintArray(arr_tmp, len);
+  if (print_array) PrintArray(arr_tmp, len);
+
+  std::cerr << "Quick Sort Result\n";
+  CopyArray(arr, arr_tmp, len);
+  MeasureExecutionTime(arr_tmp, 0, len - 1, QuickSort);
+  if (print_array) PrintArray(arr_tmp, len);
 
   delete[] arr_tmp;
   delete[] arr;
